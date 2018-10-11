@@ -2,6 +2,9 @@ body{
     text-align:center;
 } 
 
+p {
+    word-wrap: break-word;
+}
 nav li{
     display: inline;
     margin: 30px;
