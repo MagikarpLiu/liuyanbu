@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Articles</title>
+        <link rel="stylesheet" href="/css/index.css">
+    </head>
+    <body>
+        <div class="logo">
+            <a href="/"><img src="/images/123.png" alt="test" height="60" width="60"></a>
+            <h3>留言薄</h3>
+        </div>
+        <div>
+            <form action="/article" method="post">
+                <div class="field required">
+                    <label>标题</label>
+                    <input type="text" name="title">
+                </div>
+                <div class="field required">
+                    <label>内容</label>
+                    <textarea name="content" rows="15"></textarea>
+                </div>
+                <input type="submit" value="发布留言">
+            </form>
+        </div>
+        
+    </body>
+</html>

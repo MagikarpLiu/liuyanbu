@@ -1,0 +1,28 @@
+body{ 
+    text-align:center;
+} 
+
+nav li{
+    display: inline;
+    margin: 30px;
+}
+
+div.logo {
+    margin: 0 auto;
+    display: inline-flex
+}
+
+.article {
+    margin: 10px auto 10px auto;
+    border: 1px black solid;
+    width: 500px;
+}
+
+.article h1 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-align: center;
+}
+
+.article p {
+    text-align: center;
+}
