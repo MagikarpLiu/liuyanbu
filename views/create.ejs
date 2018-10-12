@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>留言板</title>
         <link rel="stylesheet" href="/css/index.css">
     </head>
@@ -9,6 +10,11 @@
             <a href="/"><img src="/images/123.png" alt="test" height="60" width="60"></a>
             <h3>留言板</h3>
         </div>
+
+        <% if(error) { %>
+                    <p class="flash"><%= error %></p>
+        <% } %>
+
         <div>
             <form action="/article" method="post">
                 <div class="field required">
@@ -17,7 +23,7 @@
                 </div>
                 <div class="field required">
                     <label>内容</label>
-                    <textarea name="content" cols= "22" rows="15"></textarea>
+                    <textarea name="content" rows="15"></textarea>
                 </div>
                 <input type="submit" value="发布留言">
             </form>

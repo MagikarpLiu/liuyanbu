@@ -1,10 +1,26 @@
 var express = require('express');
 var articleModel = require("./models/article")
+var flash = require('connect-flash')
 var bodyParser = require('body-parser')
+var session = require('express-session')
 
 var app = express();
 //开放静态文件夹 public
 app.use(express.static('public'));
+
+//cookie
+app.use(session({
+    cookie: {
+        path: '/', 
+        httpOnly: true, 
+        secure: false, 
+        maxAge: 60 * 1000
+    },
+    secret: 'test',
+    resave: false,
+    saveUninitialized: false
+}))
+
 
 //set view engine to ejs
 app.set('view engine','ejs');
@@ -14,7 +30,16 @@ app.set('views', __dirname + '/views');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (req, res, next) => {
+// add flush
+app.use(flash());
+//中间件要使用next()
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success').toString();
+    res.locals.error = req.flash('error').toString();
+    next();
+})
+
+app.get('/', (req, res) => {
     articleModel.find({}).sort({_id: -1}).exec((err, articles) => {
         if(err) return next(err)
         res.render('index', {
@@ -23,21 +48,27 @@ app.get('/', (req, res, next) => {
     })
 })
 
+app.get('/test', (req, res)=> {
+    res.render('test');
+})
+
 app.get("/create", (req, res) => {
     res.render('create');
 })
 
-app.post('/article', (req, res, next) => {
+app.post('/article', (req, res) => {
     let title = req.body.title;
     let content = req.body.content;
 
     //错误检查（按说应该放在页面上进行检查呀）
     try {
         if (!title.length) {
-          throw new Error('请填写标题')
+          req.flash('error', '请填写标题')
+          return res.redirect('back')
         }
         if (!content.length) {
-          throw new Error('请填写内容')
+          req.flash('error', '请填写内容')
+          return res.redirect('back')
         }
     } catch (e) {
         req.flash('error', e.message)
@@ -54,17 +85,17 @@ app.post('/article', (req, res, next) => {
             return next(err);
         }
         else {
-            console.log(article)
+            req.flash('success', "留言成功")
             res.redirect('/')
         }
     })
 })
 
-app.get('/remove_article/:articleID', (req, res, next) => {
+app.get('/remove_article/:articleID', (req, res) => {
     const articleID = req.params.articleID
-    articleModel.deleteOne({ _id: articleID }).exec((err, article) =>{
+    articleModel.deleteOne({ _id: articleID }).exec((err) =>{
         if(err) next(arr);
-        console.log("成功删除" + article._id);
+        req.flash('success', '删除成功')
         res.redirect("back")
     })
 })

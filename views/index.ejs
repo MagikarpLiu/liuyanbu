@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>留言板</title>
         <link rel="stylesheet" href="/css/index.css">
     </head>
@@ -11,16 +12,26 @@
         </div>
         <div>
             <a href="/create">添加留言</a>
+            <a href="/test">test</a>
         </div>
         <div id="articles">
+            <% if(success) { %>
+                    <p class="flash"><%= success %></p>
+            <% } %>
+            
             <% articles.forEach(article => { %>
                 <div class="article">
                     <h1><%= article.title %></h1>
                     <p><%= article.content %></p>
-                    <a href="/remove_article/<%= article._id %>">删除</a>
+                    <a href="/remove_article/<%= article._id %>"><button>删除</button></a>
                 </div>
             <% }); %> 
         </div>
-        
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            setTimeout(()=> {
+                $('.flash').hide();
+            }, 1000)
+        </script>
     </body>
 </html>

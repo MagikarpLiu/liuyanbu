@@ -2,6 +2,11 @@ body{
     text-align:center;
 } 
 
+div {
+    /* border: solid black 1px; */
+    margin: 10px;
+}
+
 p, 
 h1 {
     word-wrap: break-word;
@@ -31,4 +36,12 @@ div.logo {
 
 .article p {
     text-align: center;
+}
+
+.flash {
+    margin: 10px auto 10px auto;
+    border: 1px white solid;
+    width: 500px;
+    background-color: salmon;
+    color: white;
 }
