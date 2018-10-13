@@ -11,13 +11,27 @@
             <h3>留言板</h3>
         </div>
         <div>
+            <% if(user) { %>
+                <p>用户名：<%= userName %> <a href="/user/logout">登出</a></p>
+            <% } else { %>
+                <p>未登录<a href="/user/create">注册</a> <a href="/user/login">登录</a></p>
+            <% } %> 
+        </div>
+        <div>
             <a href="/create">添加留言</a>
             <a href="/test">test</a>
         </div>
-        <div id="articles">
-            <% if(success) { %>
-                    <p class="flash"><%= success %></p>
+
+        <div>
+            <% if(error) { %>
+                <p class="flash"><%= error %></p>
             <% } %>
+            <% if(success) { %>
+                <p class="flash"><%= success %></p>
+            <% } %>
+        </div>
+
+        <div id="articles">
             
             <% articles.forEach(article => { %>
                 <div class="article">
@@ -31,7 +45,7 @@
         <script>
             setTimeout(()=> {
                 $('.flash').hide();
-            }, 1000)
+            }, 1500)
         </script>
     </body>
 </html>

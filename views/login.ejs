@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>留言板</title>
+        <link rel="stylesheet" href="/css/index.css">
+    </head>
+    <body>
+        <div class="logo">
+            <a href="/"><img src="/images/123.png" alt="test" height="60" width="60"></a>
+            <h3>留言板</h3>
+        </div>
+
+        <div>
+            <% if(error) { %>
+                <p class="flash"><%= error %></p>
+            <% } %>
+            <% if(success) { %>
+                <p class="flash"><%= success %></p>
+            <% } %>
+        </div>
+
+        <div>
+            <form action="/user/login" method="post">
+                <div class="field required">
+                    <label>email</label>
+                    <input type="text" name="email">
+                </div>
+                <div class="field required">
+                    <label>password</label>
+                    <input type="password" name="password">
+                </div>
+                <input type="submit" value="登录">
+            </form>
+        </div>
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            setTimeout(()=> {
+                $('.flash').hide();
+            }, 1500)
+        </script>
+    </body>
+</html>

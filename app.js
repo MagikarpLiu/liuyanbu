@@ -1,8 +1,11 @@
-var express = require('express');
-var articleModel = require("./models/article")
-var flash = require('connect-flash')
-var bodyParser = require('body-parser')
-var session = require('express-session')
+const express = require('express');
+const articleModel = require("./models/article")
+const flash = require('connect-flash')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('./models/mongoose')
+var userRouter = require('./routes/user_router')
 
 var app = express();
 //开放静态文件夹 public
@@ -18,7 +21,10 @@ app.use(session({
     },
     secret: 'test',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection
+    })
 }))
 
 
@@ -34,10 +40,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(flash());
 //中间件要使用next()
 app.use((req, res, next) => {
+    res.locals.user = req.session.user;
+    res.locals.userName = req.session.userName;
     res.locals.success = req.flash('success').toString();
     res.locals.error = req.flash('error').toString();
     next();
 })
+
+//添加user路由
+app.use('/user', userRouter);
 
 app.get('/', (req, res) => {
     articleModel.find({}).sort({_id: -1}).exec((err, articles) => {
@@ -61,6 +72,7 @@ app.post('/article', (req, res) => {
     let content = req.body.content;
 
     //错误检查（按说应该放在页面上进行检查呀）
+    //undefined.length 会throw error
     try {
         if (!title.length) {
           req.flash('error', '请填写标题')

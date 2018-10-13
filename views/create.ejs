@@ -11,9 +11,14 @@
             <h3>留言板</h3>
         </div>
 
-        <% if(error) { %>
-                    <p class="flash"><%= error %></p>
-        <% } %>
+        <div>
+            <% if(error) { %>
+                <p class="flash"><%= error %></p>
+            <% } %>
+            <% if(success) { %>
+                <p class="flash"><%= success %></p>
+            <% } %>
+        </div>
 
         <div>
             <form action="/article" method="post">
@@ -28,6 +33,11 @@
                 <input type="submit" value="发布留言">
             </form>
         </div>
-        
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            setTimeout(()=> {
+                $('.flash').hide();
+            }, 1500)
+        </script>
     </body>
 </html>
