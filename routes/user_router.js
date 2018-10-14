@@ -46,7 +46,6 @@ router.post('/login', (req, res)=> {
             res.redirect('back')
         } else if(userFounded) {
             req.session.user = userFounded
-            console.log(userFounded)
             if(longMaxAge) {
                 req.session.cookie.maxAge = 24 * 60 * 60 * 1000  //时长1天
                 console.log("记住我")
@@ -102,12 +101,14 @@ router.post('/create', upload.single('avatar'), (req, res) => {
         avatar: avatar.path.split(path.sep).pop(0)
     }
 
-
     userModel.create(newUser, (err, user) => {
         if(err) {
+            fs.unlink(avatar.path)
             req.flash('error', "邮箱或用户名已存在")
             return res.redirect('back')
         } else {
+            //删除密码等敏感信息后讲user存入session中
+            delete user.password
             req.session.user = user
             req.flash('sucess', "创建成功")
             res.redirect('/')

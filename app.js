@@ -3,6 +3,7 @@ const express = require('express');
 const flash = require('connect-flash')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+//use mongoStore to automatcially store the session to the db
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('./models/mongoose')
 
@@ -58,7 +59,6 @@ app.use(flash());
 //res.locals 内部存储的变量可以直接被 view engine 在渲染时使用
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
-    console.log(res.locals.user);
     res.locals.success = req.flash('success').toString();
     res.locals.error = req.flash('error').toString();
     next();
