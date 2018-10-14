@@ -1,46 +1,39 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
-        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-        <title>留言板</title>
-        <style>
-        </style>
-    </head>
-    <body>
-        <div class='container-fluid'>
-            <div class="row bg-warning">
-                <div class="col"></div><a href="/"><img src="/images/123.png" alt="test" height="60" width="60"></a><div></div>
-                <div class="col"><h3>留言板</h3></div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                    <div class="col-sm-3 col-md-3 offset-md-3">My first project</div>
-                    <div class="col-sm-9 col-md-6 text-white bg-danger">Good Evening</div>
-            </div>
-        </div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <div class="btn-group" role="group" aria-label="">
-            <button type="button" class="btn btn-secondary">123</button>
-            <button type="button" class="btn btn-secondary">456</button>
-            <div class="btn-group" role="group">
-                <button id="dropdownId" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                    
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownId">
-                    <a class="dropdown-item" href="#">123</a>
-                    <a class="dropdown-item" href="#">456</a>
-                </div>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/signin.css">
+  </head>
+  
+  <body class="text-center">
+        <form class="form-signin" action="/test" method="post">
+            <img class="mb-4" src="/images/123.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+            <div>
+                <% if(user) { %>
+                    <p>用户名：<%= userName %> <a href="/user/logout">登出</a></p>
+                <% } else { %>
+                    <p>未登录<a href="/user/create">注册</a> <a href="/user/login">登录</a></p>
+                <% } %> 
             </div>
-        </div>
-
-        <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-        <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
-        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
-        <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
-        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    </body>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="text" name="email" class="form-control" placeholder="邮箱" required autofocus>
+            
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="密码" required>
+            <div class="checkbox mb-3">
+                <label>
+                <input type="checkbox" value="remember" name="remember"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">Powered by Express &copy; 2017-2018</p>
+        </form>
+      </body>
 </html>

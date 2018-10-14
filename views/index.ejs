@@ -3,7 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>留言板</title>
-        <link rel="stylesheet" href="/css/index.css">
+
+        <link rel="stylesheet" href="/css/index.css"> <!-- 此处的路径不能用实际路径 除非app.js中设定路径option-->
     </head>
     <body>
         <div class="logo">
@@ -18,7 +19,7 @@
             <% } %> 
         </div>
         <div>
-            <a href="/create">添加留言</a>
+            <a href="/article/create">添加留言</a>
             <a href="/test">test</a>
         </div>
 
@@ -37,7 +38,7 @@
                 <div class="article">
                     <h1><%= article.title %></h1>
                     <p><%= article.content %></p>
-                    <a href="/remove_article/<%= article._id %>"><button>删除</button></a>
+                    <a href="/article/remove/<%= article._id %>"><button>删除</button></a>
                 </div>
             <% }); %> 
         </div>

@@ -1,13 +1,22 @@
+//require 库文件
 const express = require('express');
-const articleModel = require("./models/article")
 const flash = require('connect-flash')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('./models/mongoose')
-var userRouter = require('./routes/user_router')
 
+//database model
+const articleModel = require("./models/article")
+
+//routers
+const userRouter = require('./routes/user_router')
+const articleRouter  = require('./routes/article_router')
+
+
+//app init
 var app = express();
+
 //开放静态文件夹 public
 app.use(express.static('public'));
 
@@ -17,7 +26,8 @@ app.use(session({
         path: '/', 
         httpOnly: true, 
         secure: false, 
-        maxAge: 60 * 1000
+        //10 * 60 * 1000ms = 10min
+        maxAge: 10 * 60 * 1000
     },
     secret: 'test',
     resave: false,
@@ -38,7 +48,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // add flush
 app.use(flash());
-//中间件要使用next()
+//中间件要使用next()来把控制权交给后续路由
+//res.locals 内部存储的变量可以直接被 view engine 在渲染时使用
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
     res.locals.userName = req.session.userName;
@@ -47,15 +58,15 @@ app.use((req, res, next) => {
     next();
 })
 
-//添加user路由
+//添加路由
 app.use('/user', userRouter);
+app.use('/article', articleRouter);
 
 app.get('/', (req, res) => {
     articleModel.find({}).sort({_id: -1}).exec((err, articles) => {
         if(err) return next(err)
-        res.render('index', {
-            articles: articles
-        })
+        res.locals.articles = articles
+        res.render('index');
     })
 })
 
@@ -63,53 +74,10 @@ app.get('/test', (req, res)=> {
     res.render('test');
 })
 
-app.get("/create", (req, res) => {
-    res.render('create');
+app.post('/test', (req, res) => {
+    console.log(req.body)
+    res.send("ok")
 })
 
-app.post('/article', (req, res) => {
-    let title = req.body.title;
-    let content = req.body.content;
-
-    //错误检查（按说应该放在页面上进行检查呀）
-    //undefined.length 会throw error
-    try {
-        if (!title.length) {
-          req.flash('error', '请填写标题')
-          return res.redirect('back')
-        }
-        if (!content.length) {
-          req.flash('error', '请填写内容')
-          return res.redirect('back')
-        }
-    } catch (e) {
-        req.flash('error', e.message)
-        return res.redirect('back')
-    }
-
-    let articleData= {
-        title: title,
-        content: content
-    }
-
-    articleModel.create(articleData, (err, article) => {
-        if (err) {
-            return next(err);
-        }
-        else {
-            req.flash('success', "留言成功")
-            res.redirect('/')
-        }
-    })
-})
-
-app.get('/remove_article/:articleID', (req, res) => {
-    const articleID = req.params.articleID
-    articleModel.deleteOne({ _id: articleID }).exec((err) =>{
-        if(err) next(arr);
-        req.flash('success', '删除成功')
-        res.redirect("back")
-    })
-})
-
+//监听80端口的请求
 app.listen(80)
