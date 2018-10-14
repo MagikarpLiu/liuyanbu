@@ -13,7 +13,11 @@
         </div>
         <div>
             <% if(user) { %>
-                <p>用户名：<%= userName %> <a href="/user/logout">登出</a></p>
+                <div class="logo">
+                    <img width="60" height="60" src= <%= "/avatars/" + user.avatar %> >
+                    <p>用户名：<%= user.username %> <a href="/user/logout">登出</a></p>
+                </div>
+                
             <% } else { %>
                 <p>未登录<a href="/user/create">注册</a> <a href="/user/login">登录</a></p>
             <% } %> 

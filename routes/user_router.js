@@ -4,6 +4,12 @@ var userModel = require('../models/user');
 //sha1 用于密码加密
 const sha1 = require('sha1')
 
+//mulert path fs 用于处理头像上传
+const multer  = require('multer')
+var upload = multer({ dest: './public/avatars/'}) //上传处理中间件 会把文件挂载在req.file或files中
+const path = require('path')
+const fs = require('fs')
+
 //添加请求日志
 router.use('/', function(req, res, next) {
     console.log('[express]: Request URL:', req.originalUrl);
@@ -39,8 +45,8 @@ router.post('/login', (req, res)=> {
             req.flash('error', err);
             res.redirect('back')
         } else if(userFounded) {
-            req.session.user = userFounded._id
-            req.session.userName = userFounded.username
+            req.session.user = userFounded
+            console.log(userFounded)
             if(longMaxAge) {
                 req.session.cookie.maxAge = 24 * 60 * 60 * 1000  //时长1天
                 console.log("记住我")
@@ -61,33 +67,39 @@ router.get('/logout', (req, res) => {
     res.redirect('/')
 })
 
-router.post('/create', (req, res) => {
+router.post('/create', upload.single('avatar'), (req, res) => {
     let email = req.body.email
     let username = req.body.username
     let password = req.body.password
+    let avatar = req.file
     try{
+        if(!avatar) {
+            throw new Error('头像不能为空')
+        }
         if(!email.length) {
-            req.flash('error', "email不能为空")
-            return res.redirect('back')
+            throw new Error('邮箱不能为空')
         }
         if(!username.length) {
-            req.flash('error', "username不能为空")
-            return res.redirect('back')
+            throw new Error('名字不能为空')
         }
         if(!password.length) {
-            req.flash('error', "password不能为空")
-            return res.redirect('back')
+            throw new Error('密码不能为空')
         }
     } catch(err) {
-        console.log(err)
-        req.flash('error', err);
+        //如果注册失败 删除上传的头像
+        if(avatar) {
+            fs.unlink(avatar.path)
+        }
+        req.flash('error', err.message);
         return res.redirect('back')
     }
 
     let newUser = {
         email:email,
         username: username,
-        password: sha1(password)
+        password: sha1(password),
+        //存储文件名
+        avatar: avatar.path.split(path.sep).pop(0)
     }
 
 
@@ -96,9 +108,7 @@ router.post('/create', (req, res) => {
             req.flash('error', "邮箱或用户名已存在")
             return res.redirect('back')
         } else {
-            console.log(user);
-            req.session.user = user._id
-            req.session.userName = user.username
+            req.session.user = user
             req.flash('sucess', "创建成功")
             res.redirect('/')
         }

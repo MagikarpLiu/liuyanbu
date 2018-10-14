@@ -9,6 +9,12 @@ const mongoose = require('./models/mongoose')
 //database model
 const articleModel = require("./models/article")
 
+//文件上传组件
+const multer  = require('multer')
+var upload = multer({ dest: './public/avatars/'}) //上传处理中间件 会把文件挂载在req.file或files中
+const path = require('path')
+const fs = require('fs')
+
 //routers
 const userRouter = require('./routes/user_router')
 const articleRouter  = require('./routes/article_router')
@@ -52,7 +58,7 @@ app.use(flash());
 //res.locals 内部存储的变量可以直接被 view engine 在渲染时使用
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
-    res.locals.userName = req.session.userName;
+    console.log(res.locals.user);
     res.locals.success = req.flash('success').toString();
     res.locals.error = req.flash('error').toString();
     next();
@@ -74,10 +80,40 @@ app.get('/test', (req, res)=> {
     res.render('test');
 })
 
+app.post('/test', upload.single('avatar'), (req, res) => {
+    let email = req.body.email
+    let username = req.body.username
+    let password = req.body.password
+    let avatar = req.file
+    try{
+        if(!email.length) {
+            throw new Error('邮箱不能为空')
+        }
+        if(!username.length) {
+            throw new Error('名字不能为空')
+        }
+        if(!password.length) {
+            throw new Error('密码不能为空')
+        }
+        if(!avatar) {
+            throw new Error('头像不能为空')
+        }
+    } catch(err) {
+        //如果注册失败 删除上传的头像
+        if(avatar) {
+            console.log("[FS]: 删除头像")
+            fs.unlink(avatar.path)
+        }
+        req.flash('error', err.message);
+        return res.redirect('back')
+    }
+})
+
 app.post('/test', (req, res) => {
     console.log(req.body)
     res.send("ok")
 })
+
 
 //监听80端口的请求
 app.listen(80)

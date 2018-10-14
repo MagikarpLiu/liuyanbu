@@ -1,39 +1,51 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>留言板</title>
+        <link rel="stylesheet" href="/css/index.css">
+    </head>
+    <body>
+        <div class="logo">
+            <a href="/"><img src="/images/123.png" alt="test" height="60" width="60"></a>
+            <h3>留言板</h3>
+        </div>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/signin.css">
-  </head>
-  
-  <body class="text-center">
-        <form class="form-signin" action="/test" method="post">
-            <img class="mb-4" src="/images/123.png" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
-            <div>
-                <% if(user) { %>
-                    <p>用户名：<%= userName %> <a href="/user/logout">登出</a></p>
-                <% } else { %>
-                    <p>未登录<a href="/user/create">注册</a> <a href="/user/login">登录</a></p>
-                <% } %> 
-            </div>
-            <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="text" name="email" class="form-control" placeholder="邮箱" required autofocus>
-            
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="密码" required>
-            <div class="checkbox mb-3">
-                <label>
-                <input type="checkbox" value="remember" name="remember"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            <p class="mt-5 mb-3 text-muted">Powered by Express &copy; 2017-2018</p>
-        </form>
-      </body>
+        <div>
+            <% if(error) { %>
+                <p class="flash"><%= error %></p>
+            <% } %>
+            <% if(success) { %>
+                <p class="flash"><%= success %></p>
+            <% } %>
+        </div>
+
+        <div>
+            <form action="/test" method="post" enctype="multipart/form-data">
+                <div class="field required">
+                    <label>email</label>
+                    <input type="text" name="email">
+                </div>
+                <div class="field required">
+                        <label>username</label>
+                        <input type="text" name="username">
+                </div>
+                <div class="field required">
+                        <label>avatar</label>
+                        <input type="file" name="avatar">
+                </div>
+                <div class="field required">
+                    <label>password</label>
+                    <input type="password" name="password">
+                </div>
+                <input type="submit" value="创建用户">
+            </form>
+        </div>
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            setTimeout(()=> {
+                $('.flash').hide();
+            }, 1500)
+        </script>  
+    </body>
 </html>
